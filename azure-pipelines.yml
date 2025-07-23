@@ -68,8 +68,8 @@ stages:
                 - task: AzureWebApp@1
                   displayName: Deploy to Development Azure Web APP
                   inputs:
-                    appName: $(appName)
-                    appType: webAppLinux
-                    azureSubscription: $(azureSubscription)
+                    azureSubscription: 'Pay-As-You-Go(67b5d626-6793-4865-84b8-57330f18fb6c)'
+                    appType: 'webAppLinux'
+                    appName: 'mywebapp-9y1w8jua'
                     package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
                     runtimeStack: 'Node|16-lts'
