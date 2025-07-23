@@ -1,0 +1,75 @@
+# Node.js with angular
+
+name: Node JS Pipeline
+
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+  - stage: build
+    displayName: Build angular code
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '16.x'
+            displayName: Install node.js 16.x
+          
+          - script: |
+              cd AngularWithAzure/
+              npm install -g @angular/cli
+              npm install
+              npm build --prod
+            workingDirectory: '$(Build.SourcesDirectory)'
+            displayName: 'NPM install and build'
+          
+          - task: CmdLine@2
+            displayName: Run Unit tests
+            inputs:
+              script: |
+                cd AngularWithAzure/
+                ng test --browsers=ChromeHeadLess --code-coverage --watch=false
+          
+          - task: ArchiveFiles@2
+            displayName: Archive Files
+            inputs:
+              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/dist/angular-with-azure/'
+              includeRootFolder: false
+              archiveType: zip
+              archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+              replaceExistingArchive: true
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+              ArtifactName: drop
+              publishLocation: Container
+
+  - stage: development
+    displayName: Deploy to Development environment
+    dependsOn: build
+    condition: succeeded()
+    jobs:
+      - deployment: deploymentToDevelopment
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: angular-dev
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureWebApp@1
+                  displayName: Deploy to Development Azure Web APP
+                  inputs:
+                    appName: $(appName)
+                    appType: webAppLinux
+                    azureSubscription: $(azureSubscription)
+                    package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+                    runtimeStack: 'Node|16-lts'
