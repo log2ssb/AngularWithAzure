@@ -79,6 +79,13 @@ stages:
                     artifactName: 'drop'
                     downloadPath: '$(System.ArtifactsDirectory)'
 
+                - script: |
+                    cd '$(System.ArtifactsDirectory)/drop/'
+                    ls -lrth
+                    unzip $(Build.BuildId).zip
+                    ls -lrth
+                  displayName: show build package
+
                 - task: AzureWebApp@1
                   displayName: Deploy to Development Azure Web APP
                   inputs:
@@ -87,3 +94,4 @@ stages:
                     appName: 'mywebapp-qt0ssu7b'
                     package: '$(System.ArtifactsDirectory)/drop/$(Build.BuildId).zip'
                     runtimeStack: 'NODE|20-lts'
+                    configurationStrings: 'pm2 serve /home/site/wwwroot --no-daemon'
