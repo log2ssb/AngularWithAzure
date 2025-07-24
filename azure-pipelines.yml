@@ -50,7 +50,7 @@ stages:
           - script: |
               cd $(Build.ArtifactStagingDirectory)/
               ls -lrth $(Build.ArtifactStagingDirectory)/
-              tar -xzvf $(Build.BuildId).zip
+              unzip $(Build.BuildId).zip
               ls -lrth
 
           - task: PublishBuildArtifacts@1
