@@ -72,11 +72,18 @@ stages:
           runOnce:
             deploy:
               steps:
+                - task: DownloadBuildArtifacts@0
+                  inputs:
+                    buildType: 'current'
+                    downloadType: 'single'
+                    artifactName: 'drop'
+                    downloadPath: '$(System.ArtifactsDirectory)'
+
                 - task: AzureWebApp@1
                   displayName: Deploy to Development Azure Web APP
                   inputs:
                     azureSubscription: 'Pay-As-You-Go(67b5d626-6793-4865-84b8-57330f18fb6c)'
                     appType: 'webAppLinux'
                     appName: 'mywebapp-qt0ssu7b'
-                    package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+                    package: '$(System.ArtifactsDirectory)/drop/$(Build.BuildId).zip'
                     runtimeStack: 'NODE|20-lts'
