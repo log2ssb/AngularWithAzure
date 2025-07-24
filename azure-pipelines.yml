@@ -73,4 +73,4 @@ stages:
                     appType: 'webAppLinux'
                     appName: 'mywebapp-qt0ssu7b'
                     package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
-                    runtimeStack: 'Node|16-lts'
+                    runtimeStack: 'Node|20-lts'
