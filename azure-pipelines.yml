@@ -78,5 +78,5 @@ stages:
                     azureSubscription: 'Pay-As-You-Go(67b5d626-6793-4865-84b8-57330f18fb6c)'
                     appType: 'webAppLinux'
                     appName: 'mywebapp-qt0ssu7b'
-                    package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+                    package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
                     runtimeStack: 'NODE|20-lts'
