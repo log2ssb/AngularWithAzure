@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_AngularWithAzure_1762188769213-pr-trigger-input-set
+  identifier: Build_AngularWithAzure_1762188769213prtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: default_project
+  pipeline:
+    identifier: Build_AngularWithAzure_1762188769213
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>
